@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!--Basic meta tags, add description and tile name tags-->
+        <meta charset="UTF-8">
+        <meta name="description" content="Aframe Panorama 360 Template">
+        <meta name="keywords" content="aframe, models, scenes, assets">
+        <meta names="author" content="Chipsxpnft">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <!--What is this?-->
+        <title>First Backyard Panorama with Raccoon</title>
+
+        <!--Latest stable Aframe.io version as of 10/24/2022 plus Physics-->
+        <script src="./master/aframe-v1.3.0.min.js"></script>
+        <script src="./master/aframe-v1.3.0.min.js.map"></script>
+        <script src="./master/physics/aframe-physics-system.min.js"></script>
+        
+        <!--Hand Controllers for grab, strech, collusion, and laser point-->
+        <script src="./master/extras/aframe-extras.min.js"></script>
+        <script src="./master/superhands/super-hands.min.js"></script>
+        
+    </head>
+<body>
+    <!--start a scene with render options set true, color, 72hz, lights off-->
+    <a-scene renderer="antialias:true;
+            colorManagement:true;
+            highRefreshRate:true;
+            sortObjects:true;
+            physicallyCorrectLights:true;
+            precision:true"
+            light="defaultLightsEnabled:false">
+    <!--Preloading all models, environments, maps, and other assets-->
+    <a-assets>
+        <img id="psby8k" src="./scenes/panostudio-backyard-8k.webp">
+        <img id="displaces8k" src="./scenes/panostudio-backyard-8k-displace.webp">
+        <img id="normals8k" src="./scenes/panostudio-backyard-8k-normal.webp">
+        <img id="ambientos8k" src="./scenes/panostudio-backyard-8k-ambiento.webp">
+    </a-assets>
+    <!-- Creating sky sphere radius, height, width, and load source material-->
+    <a-sky color="#eaeaea" src="#psby8k" radius="48" segments-height="256" segments-width="256"
+        material="shader:standard; 
+            displacementMap:#displaces8k; displacementScale:1; displacementBias:1;
+            displacementTextureRepeat:1 1; displacementTextureOffset:0 0;
+            normalMap:#normals8k; normalScale:1 1; normalTextureRepeat:1 1; normalTextureOffset:0 0;
+            ambientOcclusionMap:#ambientos8k; ambientOcclusionMapIntensity:0.8;
+            ambientOcclusionTextureRepeat:1 1; ambientOcclusionTextureOffset:0 0;  
+            metalness:0.1;
+            roughness:0.1">
+        <!--adding hemisphere light ground-sky color and directional light on sun-->
+        <a-entity light="type: hemisphere; color: #ababdd; groundColor: #a9bba9; intensity: 8.5" 
+        position="0.4 -8 -0.04"></a-entity>
+        <a-entity? light="type: directional; color: #ffffff; groundColor: #aabbaa; intensity: 13.5;
+        castShadow: true; angle: 120" 
+        position="2 -43 6.5"></a-entity>
+    </a-sky>
+    <!--Add Oculus controls in VR Mode-->
+        <a-entity super-hands oculus-touch-controls="hand:left; model:true">
+            <!--<a-entity super-hands tracked-controls="controller: 0; idPrefix: VRLeft"></a-entity>-->
+        </a-entity>
+        <a-entity super-hands oculus-touch-controls="hand:right; model:true">
+            <!--<a-entity super-hands tracked-controls="controller: 1; idPrefix: VRRight"></a-entity>-->
+        </a-entity>
+        <a-box height="0.5" width="0.5" depth="0.5" sphere-collider grabbable draggable 
+        color="blue" position="0 0 -0.4"></a-box>
+    </a-scene>
+</body>
+
+</html>
