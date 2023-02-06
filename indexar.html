@@ -37,7 +37,7 @@
         <img id="displaces8k" src="./scenes/panostudio-backyard-8k-displace.webp">
         <img id="normals8k" src="./scenes/panostudio-backyard-8k-normal.webp">
         <img id="ambientos8k" src="./scenes/panostudio-backyard-8k-ambiento.webp">
-        <a-asset-item id="character1" src="./models/characters/"></a-asset-item>
+        <a-asset-item id="character1" src="./models/characters/Duck.glb"></a-asset-item>
     </a-assets>
     <!-- Creating sky sphere radius, height, width, and load source material-->
     <a-sky color="#eaeaea" src="#psby8k" radius="48" segments-height="256" segments-width="256"
@@ -57,16 +57,38 @@
         position="2 -43 6.5"></a-entity>
     </a-sky>
     <!--Add Models as GLTF standard 2.0-->
-    <a-gltf-model src="#character1"></a-gltf-model>
-    <!--Add Oculus controls in VR Mode-->
-        <a-entity super-hands oculus-touch-controls="hand:left; model:true">
-            <!--<a-entity super-hands tracked-controls="controller: 0; idPrefix: VRLeft"></a-entity>-->
+    <a-gltf-model position="0 0 0" src="#character1">
+        <a-sphere position="0 0 0" color="#EF2D5E" radius="0.5" class="grabable"></a-sphere>
+        <!--Added a red collider sphere-->
+    </a-gltf-model>
+    <!--Add Oculus controls in VR Mode Left first then the Right using standard model-->
+        <a-entity id="leftHand" oculus-touch-controls="hand:left; model:true">
+            <a-entity raycaster="objects: .grabable; showLine: true; far: 10;"></a-entity>
         </a-entity>
-        <a-entity super-hands oculus-touch-controls="hand:right; model:true">
-            <!--<a-entity super-hands tracked-controls="controller: 1; idPrefix: VRRight"></a-entity>-->
+        <a-entity id="rightHand" oculus-touch-controls="hand:right; model:true">
+            <a-entity raycaster="objects: .grabable; showLine: true; far: 10;"></a-entity>
         </a-entity>
         
     </a-scene>
+
+<script>
+AFRAME.registerComponent('hand-controls', {
+    init: function () {
+        this.el.addEventListener('grabstart', (evt) => {
+            this.grabbedObject = evt.detail.target;
+            this.grabbedObject.body.isKinematic = true;
+    });
+    this.el.addEventListener('grabend', (evt) => {
+        this.grabbedObject.body.isKinematic = false;
+        this.grabbedObject = null;
+    });
+    },
+    tick: function () {
+    if (!this.grabbedObject) { return; }
+    this.grabbedObject.setAttribute('position', this.el.getAttribute('position'));
+    }
+});
+</script>
 </body>
 
 </html>
