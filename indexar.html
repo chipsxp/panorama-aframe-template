@@ -68,27 +68,28 @@
         <a-entity id="rightHand" oculus-touch-controls="hand:right; model:true">
             <a-entity raycaster="objects: .grabable; showLine: true; far: 10;"></a-entity>
         </a-entity>
+    <!--Add hand controls to scene-->
+        <script>
+            AFRAME.registerComponent('hand-controls', {
+                init: function () {
+                    this.el.addEventListener('grabstart', (evt) => {
+                        this.grabbedObject = evt.detail.target;
+                        this.grabbedObject.body.isKinematic = true;
+                });
+                this.el.addEventListener('grabend', (evt) => {
+                    this.grabbedObject.body.isKinematic = false;
+                    this.grabbedObject = null;
+                });
+                },
+                tick: function () {
+                if (!this.grabbedObject) { return; }
+                this.grabbedObject.setAttribute('position', this.el.getAttribute('position'));
+                }
+            });
+            </script>
         
     </a-scene>
 
-<script>
-AFRAME.registerComponent('hand-controls', {
-    init: function () {
-        this.el.addEventListener('grabstart', (evt) => {
-            this.grabbedObject = evt.detail.target;
-            this.grabbedObject.body.isKinematic = true;
-    });
-    this.el.addEventListener('grabend', (evt) => {
-        this.grabbedObject.body.isKinematic = false;
-        this.grabbedObject = null;
-    });
-    },
-    tick: function () {
-    if (!this.grabbedObject) { return; }
-    this.grabbedObject.setAttribute('position', this.el.getAttribute('position'));
-    }
-});
-</script>
 </body>
 
 </html>
